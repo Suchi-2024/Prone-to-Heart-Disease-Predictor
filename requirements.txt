@@ -1,4 +1,5 @@
-﻿matplotlib
+firebase_admin
+matplotlib
 numpy
 pandas
 pillow
@@ -8,3 +9,4 @@ scipy
 pyrebase4
 requests
 streamlit
+warnings
