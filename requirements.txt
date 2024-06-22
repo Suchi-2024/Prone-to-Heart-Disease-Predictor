@@ -9,3 +9,4 @@ scipy
 pyrebase4
 requests
 streamlit
+passlib
