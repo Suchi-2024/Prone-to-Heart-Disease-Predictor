@@ -6,11 +6,13 @@ from passlib.hash import pbkdf2_sha256
 from google.cloud import storage
 import re
 import requests
+from datetime import datetime, timedelta
 import warnings
 from dashboard import main
 from about import about
+from verify import is_verification_expired
 import time
-
+import json
 
 warnings.filterwarnings("ignore")
 logged_in = False
@@ -49,6 +51,10 @@ def submit_action(valid_email, valid_pwd, valid_name):
     try:
                 
         user=auth.create_user_with_email_and_password(valid_email,valid_pwd)
+        user = auth.refresh(user['refreshToken'])
+        link = auth.send_email_verification(user['idToken'])            
+        #st.write(f'Verification link: {link}')
+        st.info('Please verify your email to Log In!')
         st.success("Account Created Successfully!")
         st.balloons()
 
@@ -137,7 +143,35 @@ def signup():
 
         #submit=st.button("Submit")
         if submit:
-            submit_action(valid_email, valid_pwd, valid_name)
+
+                # Create the user in Firebase but disable the account
+            #     user = auth.create_user_with_email_and_password(
+            #     email=valid_email,
+            #     password=valid_pwd
+            #     )
+            #     st.success('User created successfully. Please verify your email.')
+            #     count=time.time()
+                # Generate email verification link
+            #     # Refresh ID token
+               
+            #     # is_verification_expired(user['idToken'],count)
+            #     count2=time.time()
+    
+            #     user_response =auth.get_account_info(user['idToken'])
+            #     users = user_response.get('users')
+            #     for user in users:
+            #         email_verify=(user.get("emailVerified"))
+            #         if email_verify and abs(count2-count)<5:
+            #             st.write("Email is verified.")
+            #         elif email_verify==False and abs(count2-count)>5:
+            #             auth.delete_user_account()
+            #             st.warning("Session expired")
+
+            # except requests.exceptions.HTTPError as e:
+            #     st.error("User already exist.")
+            #     #st.experimental_rerun()
+            #     time.sleep(2) 
+                submit_action(valid_email, valid_pwd, valid_name)
             
            
             #login()
@@ -164,18 +198,26 @@ def login():
         if submit:
             try:
                 user=auth.sign_in_with_email_and_password(valid_email,valid_pwd)
-                name = db.child(user['localId']).child("UserName").get().val()
-                    # Redirect to dashboard with query parameter 'name'
-                try:
-                    st.query_params(name=name)
-                except:
-                    pass
-                logged_in = True
-                st.session_state['logged_in'] = True
-                st.success("Credentials matched successfully")
-                st.info("Click Log In Button again")    
+                user_response =auth.get_account_info(user['idToken'])
+                users = user_response.get('users')
+                for user in users:
+                    email_verify=(user.get("emailVerified"))
+                    if email_verify:
+                        name = db.child(user['localId']).child("UserName").get().val()
+                            # Redirect to dashboard with query parameter 'name'
+                        try:
+                            st.query_params(name=name)
+                        except:
+                            pass
+                        logged_in = True
+                        st.session_state['logged_in'] = True
+                        st.success("Credentials matched successfully")
+                        st.info("Click Log In Button again")    
+                            
+                        return name
+                    else:
+                        st.warning("Verify your email at first.If you don't find an email, try to sign up with a valid email address.")
                     
-                return name
             except requests.exceptions.HTTPError as e:
                 if e.response is not None:
                     error_msg = e.response.json()['error']['message']
