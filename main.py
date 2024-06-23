@@ -69,8 +69,8 @@ def clear_query_params():
 #     st.session_state['parameters'] = {}
 # if 'submitted' not in st.session_state:
 #     st.session_state['submitted'] = False
-# if 'clear' not in st.session_state:
-#     st.session_state['clear'] = False
+if 'clear' not in st.session_state:
+    st.session_state['clear'] = False
 
 def submit_action(valid_email, valid_pwd, valid_name):
     st.session_state['parameters'] = {'email': valid_email, 'password': valid_pwd, 'username': valid_name}
