@@ -35,14 +35,14 @@ auth2=firebase.auth()
 
 
 # Initialize the Firebase Admin SDK (if not already initialized)
-# try:
-#     firebase_admin.get_app()
-# except ValueError:
-#     try:
-#         cred = credentials.Certificate("source.json")
-#         firebase_admin.initialize_app(cred, {'projectId': 'heart-disease-predictor-730c3'})
-#     except Exception as e:
-#         print("Error initializing Firebase Admin SDK:", e)
+try:
+    firebase_admin.get_app()
+except ValueError:
+    try:
+        cred = credentials.Certificate("source.json")
+        firebase_admin.initialize_app(cred, {'projectId': 'heart-disease-predictor-730c3'})
+    except Exception as e:
+        print("Error initializing Firebase Admin SDK:", e)
 
 #Database
 db=firebase.database()
@@ -59,18 +59,18 @@ def clear_query_params():
     #st.experimental_set_query_params()
     st.query_params.clear()
 # Initialize session state variables
-if 'email' not in st.session_state:
-    st.session_state['mail'] = ''
-if 'password' not in st.session_state:
-    st.session_state['pwd'] = ''
-if 'username' not in st.session_state:
-    st.session_state['username'] = ''
-if 'parameters' not in st.session_state:
-    st.session_state['parameters'] = {}
-if 'submitted' not in st.session_state:
-    st.session_state['submitted'] = False
-if 'clear' not in st.session_state:
-    st.session_state['clear'] = False
+# if 'email' not in st.session_state:
+#     st.session_state['mail'] = ''
+# if 'password' not in st.session_state:
+#     st.session_state['pwd'] = ''
+# if 'username' not in st.session_state:
+#     st.session_state['username'] = ''
+# if 'parameters' not in st.session_state:
+#     st.session_state['parameters'] = {}
+# if 'submitted' not in st.session_state:
+#     st.session_state['submitted'] = False
+# if 'clear' not in st.session_state:
+#     st.session_state['clear'] = False
 
 def submit_action(valid_email, valid_pwd, valid_name):
     st.session_state['parameters'] = {'email': valid_email, 'password': valid_pwd, 'username': valid_name}
@@ -119,7 +119,7 @@ def is_valid_email(email):
     try:
         # Retrieve the list of users from Firebase Authentication
         user_list = auth.list_users()
-
+        #st.write(user_list)
         # Check if the email exists in the list of registered users
         for user in user_list.iterate_all():
             if user.email == email:
@@ -245,7 +245,7 @@ def signup():
             #     st.error("User already exist.")
             #     #st.experimental_rerun()
             #     time.sleep(2) 
-                submit_action(valid_email, valid_pwd, valid_name)
+            submit_action(valid_email, valid_pwd, valid_name)
             
            
             #login()
