@@ -11,6 +11,7 @@ import warnings
 from dashboard import main
 from about import about
 from verify import is_verification_expired
+from fire import base
 from firebase_admin import credentials, auth
 import time
 import json
@@ -18,16 +19,7 @@ import json
 warnings.filterwarnings("ignore")
 logged_in = False
 
-firebaseConfig = {
- 'apiKey': "AIzaSyBnythJMbS6lnHqOAerJ6F0EBTrJylNeTY",
-  'authDomain': "heart-disease-predictor-730c3.firebaseapp.com",
-  'databaseURL': "https://heart-disease-predictor-730c3-default-rtdb.europe-west1.firebasedatabase.app",
-  'projectId': "heart-disease-predictor-730c3",
-  'storageBucket': "heart-disease-predictor-730c3.appspot.com",
-  'messagingSenderId': "740324649038",
-  'appId': "1:740324649038:web:2c0767947e27f92a3afb1f",
-  'measurementId': "G-M1RN5PLLXW"
-};
+firebaseConfig=base()
 
 #Firebase Authentication
 firebase=pyrebase.initialize_app(firebaseConfig)
@@ -131,7 +123,7 @@ def is_valid_email(email):
         return False
 
 def validate_email(email):
-    patt=r"[a-zA-Z0-9]+@+[a-zA-Z]+.[a-zA-Z]{2,}$"
+    patt=r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]{2,}$"
     if re.match(patt,email):
         return email
     else:

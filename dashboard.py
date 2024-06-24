@@ -5,6 +5,7 @@ import pickle
 import sklearn
 import streamlit.components.v1 as components
 from sklearn.preprocessing import QuantileTransformer
+from know import know
 
 #st.title("Heart Disease Detection")
 
@@ -104,3 +105,4 @@ def main():
                         st.warning("Prone to Heart Disease")
     else:
         st.header(":green[Know about Parameters]")
+        know()
