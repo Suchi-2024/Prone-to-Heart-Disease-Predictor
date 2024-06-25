@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 import warnings
 from dashboard import main
 from about import about
-from verify import is_verification_expired
 from fire import base
 from firebase_admin import credentials, auth
 import time
